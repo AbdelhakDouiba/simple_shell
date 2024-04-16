@@ -20,7 +20,8 @@ char *_which(char *command)
 		return (NULL);
 	ways = strtok(p, delim);
 	if (ways == NULL)
-	{free(p);
+	{
+		free(p);
 		return (NULL);
 	}
 	b = _strlen(command);
@@ -36,12 +37,14 @@ char *_which(char *command)
 		copy(file, ways, "/");
 		copy(file, file, command);
 		if (fileexist(file, &st) != NULL)
-		{tmp = strtok(p, delim), free(tmp);
+		{
+			tmp = strtok(p, delim), free(tmp);
 			return (file);
 		}
 		ways = strtok(NULL, delim);
 		if (ways == NULL)
-		{free(p);
+		{
+			free(p);
 			return (NULL);
 		}
 		free(file);
