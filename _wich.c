@@ -9,7 +9,7 @@
 char *_which(char *command)
 {
 	int a, b;
-	char path[] = "PATH=", *p, *ways, *file;
+	char path[] = "PATH=", *p, *ways, *file, *tmp;
 	const char delim[] = ":\n";
 	struct stat st;
 
@@ -20,8 +20,7 @@ char *_which(char *command)
 		return (NULL);
 	ways = strtok(p, delim);
 	if (ways == NULL)
-	{
-		free(p);
+	{free(p);
 		return (NULL);
 	}
 	b = _strlen(command);
@@ -36,12 +35,13 @@ char *_which(char *command)
 		}
 		copy(file, ways, "/");
 		copy(file, file, command);
-		if (fileexist(file, p, &st) != NULL)
+		if (fileexist(file, &st) != NULL)
+		{tmp = strtok(p, delim), free(tmp);
 			return (file);
+		}
 		ways = strtok(NULL, delim);
 		if (ways == NULL)
-		{
-			free(p);
+		{free(p);
 			return (NULL);
 		}
 		free(file);
@@ -53,16 +53,14 @@ char *_which(char *command)
 /**
 *fileexist - check the existence of a file
 *@file: target file
-*@p: holder pointer to be freed
 *@st: pointer to stat structure variable
 *
 *Return: the file name
 */
-char *fileexist(char *file, char *p, struct stat *st)
+char *fileexist(char *file, struct stat *st)
 {
 	if ((stat(file, st)) == 0)
 	{
-		free(p);
 		return (file);
 	}
 	return (NULL);

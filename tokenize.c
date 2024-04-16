@@ -8,28 +8,24 @@
 */
 char **tokenize(char *line)
 {
-	int i = 0;
-	char **target;
+	int i = 0, num = 0;
+	char **target, *token;
 	const char delim[] = " \t\n";
 
-	target = (char **)malloc(sizeof(char *));
+	for (token = strtok(line, delim); token != NULL; token = strtok(NULL, delim))
+	{
+		num++;
+	}
+	if (num == 0)
+		return (NULL);
+	target = (char **)malloc(sizeof(char *) * (num + 1));
 	if (target == NULL)
 		return (NULL);
-	target[0] = strtok(line, delim);
-	if (target[0] == NULL)
-		return (NULL);
-	while (target[i])
+	for (token = strtok(line, delim); token != NULL; token = strtok(NULL, delim))
 	{
-		target[i + 1] = strtok(NULL, delim);
-		if (target[i + 1] == NULL)
-			break;
+		target[i] = token;
 		i++;
-		target = (char **)realloc(target, sizeof(char *) * (i + 1));
-		if (target == NULL)
-		{
-			free(target);
-			return (NULL);
-		}
 	}
+	target[i] = NULL;
 	return (target);
 }

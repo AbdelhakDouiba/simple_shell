@@ -22,8 +22,7 @@ int main(int ac __attribute__ ((unused)), char **av)
 			break; }
 		if (_strncmp(line, envb, _strlen(envb)) == 0)
 		{
-			free(line);
-			n = 0;
+			free(line), n = 0;
 			env_b();
 			continue; }
 		command = tokenize(line);
@@ -43,9 +42,10 @@ int main(int ac __attribute__ ((unused)), char **av)
 			if (execc == -1)
 			{
 				dprintf(STDERR_FILENO, "%s: No such file or directory\n", command[0]);
+				free(command[0]);
 				free(command);
 				exit(-1); }}
 		else
-		{wait(&status), free(line), n = 0, free(command); }}
+		{wait(&status), free(line), n = 0, free(command[0]), free(command); }}
 	return (0);
 }

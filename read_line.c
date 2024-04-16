@@ -8,7 +8,7 @@
 */
 char *read_line(size_t *n)
 {
-	char *line;
+	char *line = NULL;
 
 	if (getline(&line, n, stdin) == -1)
 	{
