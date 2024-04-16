@@ -2,7 +2,7 @@
 
 /**
 *handle_sigs - handle signals
-*@n: integer
+*@sin: integer
 */
 void handle_sigs(int sin)
 {

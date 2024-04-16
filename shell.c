@@ -19,11 +19,9 @@ int main(int ac __attribute__ ((unused)), char **av)
 	{write(STDOUT_FILENO, "$ ", 2), line = read_line(&n);
 		if (_strncmp(line, exiting, _strlen(exiting)) == 0)
 		{free(line);
-			break; }
+			exit(EXIT_SUCCESS); }
 		if (_strncmp(line, envb, _strlen(envb)) == 0)
-		{
-			free(line), n = 0;
-			env_b();
+		{free(line), n = 0, env_b();
 			continue; }
 		command = tokenize(line);
 		if (command == NULL)
@@ -40,14 +38,14 @@ int main(int ac __attribute__ ((unused)), char **av)
 		{
 			execc = execve(command[0], command, environ);
 			if (execc == -1)
-			{
-				dprintf(STDERR_FILENO, "%s\n", line);
+			{perror(line);
 				free(command[0]);
 				free(command);
 				exit(EXIT_FAILURE); }}
 		else
-		{wait(&status), free(line), n = 0, free(command[0]), free(command);
+		{wait(&status), free(line), line = NULL, n = 0;
+		free(command[0]), free(command);
 		if (pid == -1)
 			exit(EXIT_FAILURE); }}
-	return (0);
+	return (EXIT_SUCCESS);
 }
