@@ -22,6 +22,7 @@ char *_which(char *command)
 	if (ways == NULL)
 	{
 		free(p);
+		free(command);
 		return (NULL);
 	}
 	b = _strlen(command);
@@ -31,6 +32,7 @@ char *_which(char *command)
 		file = (char *)malloc(sizeof(char) * (a + b + 2));
 		if (file == NULL)
 		{
+			free(command);
 			free(p);
 			return (NULL);
 		}
@@ -38,17 +40,20 @@ char *_which(char *command)
 		copy(file, file, command);
 		if (fileexist(file, &st) != NULL)
 		{
-			tmp = strtok(p, delim), free(tmp);
+			tmp = strtok(p, delim);
+			free(tmp);
 			return (file);
 		}
 		ways = strtok(NULL, delim);
 		if (ways == NULL)
 		{
+			free(file);
 			free(p);
 			return (NULL);
 		}
 		free(file);
 	}
+	free(command);
 	free(p);
 	return (NULL);
 }

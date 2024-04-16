@@ -7,7 +7,7 @@
 *
 *Return: 0 on success
 */
-int main(int ac __attribute__ ((unused)), char **av)
+int main(int ac __attribute__ ((unused)), char **av __attribute__ ((unused)))
 {
 	char *line = NULL, **command, exiting[] = "exit", envb[] = "env";
 	int execc, status;
@@ -27,6 +27,7 @@ int main(int ac __attribute__ ((unused)), char **av)
 		if (_strncmp(line, envb, _strlen(envb)) == 0)
 		{
 			free(line);
+			line = NULL;
 			n = 0;
 			env_b();
 			continue;
@@ -35,14 +36,16 @@ int main(int ac __attribute__ ((unused)), char **av)
 		if (command == NULL)
 		{
 			free(line);
+			line = NULL;
 			n = 0;
 			continue;
 		}
 		command[0] = _which(command[0]);
 		if (command[0] == NULL)
 		{
-			dprintf(STDERR_FILENO, "%s: No such file or directory\n", av[0]);
+			dprintf(STDERR_FILENO, "%s: Not found\n", av[0]);
 			free(line);
+			line = NULL;
 			n = 0;
 			free(command);
 			continue;
