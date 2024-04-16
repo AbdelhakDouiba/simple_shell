@@ -9,7 +9,7 @@
 char *_which(char *command)
 {
 	int a, b;
-	char path[] = "PATH=", *p, *ways, *file, *tmp;
+	char path[] = "PATH=", *p, *ways, *file, *tmp = "";
 	const char delim[] = ":\n";
 	struct stat st;
 
@@ -21,8 +21,7 @@ char *_which(char *command)
 	ways = strtok(p, delim);
 	if (ways == NULL)
 	{
-		free(p);
-		free(command);
+		freeptr2(p, command);
 		return (NULL);
 	}
 	b = _strlen(command);
@@ -32,30 +31,34 @@ char *_which(char *command)
 		file = (char *)malloc(sizeof(char) * (a + b + 2));
 		if (file == NULL)
 		{
-			free(command);
-			free(p);
+			freeptr2(command, p);
 			return (NULL);
 		}
 		copy(file, ways, "/");
 		copy(file, file, command);
-		if (fileexist(file, &st) != NULL)
-		{
-			tmp = strtok(p, delim);
-			free(tmp);
+		if (exitance(file, tmp, p, delim) == 0)
 			return (file);
-		}
 		ways = strtok(NULL, delim);
 		if (ways == NULL)
 		{
-			free(file);
-			free(p);
+			freeptr2(file, p);
 			return (NULL);
 		}
 		free(file);
 	}
-	free(command);
-	free(p);
+	freeptr2(command, p);
 	return (NULL);
+}
+
+/**
+*freeptr2- free two memory locations
+*@ptr1: pointer
+*@ptr2: pointer
+*/
+void freeptr2(char *ptr1, char *ptr2)
+{
+	free(ptr1);
+	free(ptr2);
 }
 
 /**

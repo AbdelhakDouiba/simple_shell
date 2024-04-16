@@ -70,3 +70,25 @@ void simplecopy(char *a, char *str1)
 	}
 	a[i] = '\0';
 }
+
+/**
+*exitance - check if a file existe
+*@file: file name
+*@tmp: tmp
+*@p: pointer
+*@delim: delim
+*
+*Return: 0 if it exists
+*/
+int exitance(char *file, char *tmp, char *p, const char *delim)
+{
+	struct stat st;
+
+	if (fileexist(file, &st) != NULL)
+	{
+		tmp = strtok(p, delim);
+		free(tmp);
+		return (0);
+	}
+	return (-1);
+}

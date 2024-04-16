@@ -10,7 +10,6 @@
 int main(int ac __attribute__ ((unused)), char **av __attribute__ ((unused)))
 {
 	char *line = NULL, **command, exiting[] = "exit", envb[] = "env";
-	int execc, status;
 	size_t n = 0;
 	pid_t pid;
 
@@ -43,36 +42,84 @@ int main(int ac __attribute__ ((unused)), char **av __attribute__ ((unused)))
 		command[0] = _which(command[0]);
 		if (command[0] == NULL)
 		{
-			dprintf(STDERR_FILENO, "%s: Not found\n", av[0]);
-			free(line);
-			line = NULL;
-			n = 0;
-			free(command);
+			doing(line, command, av[0], &n);
 			continue;
 		}
 		pid = fork();
-		if (pid == 0)
-		{
-			execc = execve(command[0], command, environ);
-			if (execc == -1)
-			{
-				perror(line);
-				free(command[0]);
-				free(command);
-				exit(EXIT_FAILURE);
-			}
-		}
-		else
-		{
-			wait(&status);
-			free(line);
-			line = NULL;
-			n = 0;
-			free(command[0]);
-			free(command);
-			if (pid == -1)
-				exit(EXIT_FAILURE);
-		}
+		executing(line, command, &n, pid);
 	}
 	return (EXIT_SUCCESS);
+}
+
+/**
+*freedom - frees two memory location at the same time
+*@ptr1: pointer
+*@ptr2: pointer
+*
+*/
+void freedom(char *ptr1, char **ptr2)
+{
+	free(ptr1);
+	free(ptr2);
+}
+
+/**
+*freedom3 - frees three memory location at the same time
+*@ptr1: pointer
+*@ptr2: pointer
+*@ptr3: pointer
+*
+*/
+void freedom3(char *ptr1, char **ptr2, char *ptr3)
+{
+	free(ptr1);
+	free(ptr2);
+	free(ptr3);
+	ptr3 = NULL;
+}
+/**
+*doing - do something about it
+*@line: line pointer
+*@command: pointer
+*@av: av pointer
+*@n: pointer to n
+*/
+void doing(char *line, char **command, char *av, size_t *n)
+{
+	dprintf(STDERR_FILENO, "%s: Not found\n", av);
+	free(line);
+	free(command);
+	*n = 0;
+	line = NULL;
+}
+
+/**
+*executing - works after fork
+*@line: pointer
+*@command: pointer
+*@n: ssize_t variable
+*@pid: pid
+*
+*/
+void executing(char *line, char **command, size_t *n, pid_t pid)
+{
+	int status;
+
+	if (pid == 0)
+	{
+		if (execve(command[0], command, environ) == -1)
+		{
+			perror(line);
+			freedom(command[0], command);
+			exit(EXIT_FAILURE);
+		}
+	}
+	else
+	{
+		wait(&status);
+		freedom3(command[0], command, line);
+		*n = 0;
+		if (pid == -1)
+			exit(EXIT_FAILURE);
+	}
 }
