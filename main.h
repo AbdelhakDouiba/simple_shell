@@ -21,6 +21,7 @@ void simplecopy(char *a, char *str);
 char *_which(char *command);
 void handle_sigs(int n);
 void env_b(void);
-char *fileexist(char *file, char *p,struct stat *st);
+char *fileexist(char *file, char *p, struct stat *st);
+char *read_line(size_t *n);
 
 #endif

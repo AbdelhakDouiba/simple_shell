@@ -2,7 +2,7 @@
 
 /**
 *handle_sigs - handle signals
-*
+*@n: integer
 */
 void handle_sigs(int n)
 {

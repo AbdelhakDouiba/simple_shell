@@ -10,49 +10,32 @@
 int main(int ac __attribute__ ((unused)), char **av)
 {
 	char *line = NULL, **command, exiting[] = "exit", envb[] = "env";
-	int get, execc, status;
+	int execc, status;
 	size_t n = 0;
 	pid_t pid;
 
 	signal(SIGINT, handle_sigs);
 	while (true)
-	{
-		write(STDOUT_FILENO, "$ ", 2);
-		get = getline(&line, &n, stdin);
-		if (get == -1)
-		{
-			free(line);
-			n = 0;
-			continue;
-		}
+	{write(STDOUT_FILENO, "$ ", 2), line = read_line(&n);
 		if (_strncmp(line, exiting, _strlen(exiting)) == 0)
-		{
-			free(line);
-			break;
-		}
+		{free(line);
+			break; }
 		if (_strncmp(line, envb, _strlen(envb)) == 0)
 		{
 			free(line);
 			n = 0;
 			env_b();
-			continue;
-		}
+			continue; }
 		command = tokenize(line);
 		if (command == NULL)
-		{
-			free(line);
-			n = 0;
-			continue;
-		}
+		{free(line), n = 0;
+			continue; }
 		command[0] = _which(command[0]);
 		if (command[0] == NULL)
 		{
 			dprintf(STDERR_FILENO, "%s: No such file or directory\n", av[0]);
-			free(line);
-			n = 0;
-			free(command);
-			continue;
-		}
+			free(line), n = 0, free(command);
+			continue; }
 		pid = fork();
 		if (pid == 0)
 		{
@@ -61,16 +44,8 @@ int main(int ac __attribute__ ((unused)), char **av)
 			{
 				dprintf(STDERR_FILENO, "%s: No such file or directory\n", command[0]);
 				free(command);
-				exit(-1);
-			}
-		}
+				exit(-1); }}
 		else
-		{
-			wait(&status);
-			free(line);
-			n = 0;
-			free(command);
-		}
-	}
+		{wait(&status), free(line), n = 0, free(command); }}
 	return (0);
 }
