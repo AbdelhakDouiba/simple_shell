@@ -41,11 +41,13 @@ int main(int ac __attribute__ ((unused)), char **av)
 			execc = execve(command[0], command, environ);
 			if (execc == -1)
 			{
-				dprintf(STDERR_FILENO, "%s: No such file or directory\n", command[0]);
+				dprintf(STDERR_FILENO, "%s\n", line);
 				free(command[0]);
 				free(command);
-				exit(-1); }}
+				exit(EXIT_FAILURE); }}
 		else
-		{wait(&status), free(line), n = 0, free(command[0]), free(command); }}
+		{wait(&status), free(line), n = 0, free(command[0]), free(command);
+		if (pid == -1)
+			exit(EXIT_FAILURE); }}
 	return (0);
 }

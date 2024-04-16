@@ -4,9 +4,9 @@
 *handle_sigs - handle signals
 *@n: integer
 */
-void handle_sigs(int n)
+void handle_sigs(int sin)
 {
-	if (n == SIGINT)
+	if (sin == SIGINT)
 	{
 		write(STDOUT_FILENO, "\n$ ", 3);
 	}
