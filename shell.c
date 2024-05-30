@@ -15,7 +15,8 @@ int main(int ac __attribute__ ((unused)), char **av __attribute__ ((unused)))
 	signal(SIGINT, handle_sigs);
 	while (true)
 	{
-		write(STDOUT_FILENO, "$ ", 2);
+		if (isatty(STDIN_FILENO))
+			write(STDOUT_FILENO, "$ ", 2);
 		line = read_line(&n);
 		if (_strncmp(line, exiting, _strlen(exiting)) == 0)
 		{
@@ -46,7 +47,7 @@ int main(int ac __attribute__ ((unused)), char **av __attribute__ ((unused)))
 		}
 		executing(line, command, &n);
 	}
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 /**
@@ -113,7 +114,7 @@ void executing(char *line, char **command, size_t *n)
 	{
 		if (execve(command[0], command, environ) == -1)
 		{
-			dprintf(STDERR_FILENO, "%s: Not found 22\n", line);
+			dprintf(STDERR_FILENO, "%s: Not found\n", line);
 			free(line);
 			while (command[i] != NULL)
 				free(command[i++]);
@@ -121,6 +122,7 @@ void executing(char *line, char **command, size_t *n)
 			free(command);
 			exit(EXIT_FAILURE);
 		}
+		exit(EXIT_SUCCESS);
 	}
 	else
 	{

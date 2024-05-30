@@ -13,6 +13,8 @@ char *read_line(size_t *n)
 	if (getline(&line, n, stdin) == -1)
 	{
 		free(line);
+		if (feof(stdin))
+			exit(EXIT_SUCCESS);
 		exit(EXIT_FAILURE);
 	}
 	return (line);
