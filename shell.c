@@ -1,5 +1,5 @@
 #include "main.h"
-#define N 0
+
 /**
 *main - a simple shell
 *@av: argument verctor
