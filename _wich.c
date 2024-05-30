@@ -25,7 +25,8 @@ char *_which(char *command)
 	{
 		freeptr2(p, command);
 		return (NULL);
-	} b = _strlen(command);
+	}
+	b = _strlen(command);
 	while (ways != NULL)
 	{
 		a = _strlen(ways);
@@ -34,7 +35,8 @@ char *_which(char *command)
 		{
 			freeptr2(command, p);
 			return (NULL);
-		} copy(file, ways, "/");
+		}
+		copy(file, ways, "/");
 		copy(file, file, command);
 		if (exitance(file, p) == 0)
 		{ free(command);
@@ -45,8 +47,10 @@ char *_which(char *command)
 		{ free(command);
 			freeptr2(file, p);
 			return (NULL);
-		} free(file);
-	} freeptr2(command, p);
+		}
+		free(file);
+	}
+	freeptr2(command, p);
 	return (NULL);
 }
 
