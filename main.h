@@ -26,8 +26,8 @@ char *read_line(size_t *n);
 void freedom(char *ptr1, char **ptr2);
 void freedom3(char *ptr1, char **ptr2, char *ptr3);
 void doing(char *line, char **command, char *av, size_t *n);
-void executing(char *line, char **command, size_t *n, pid_t pid);
+void executing(char *line, char **command, size_t *n);
 void freeptr2(char *ptr1, char *ptr2);
-int exitance(char *file, char *tmp, char *p, const char *delim);
+int exitance(char *file, char *p);
 
 #endif

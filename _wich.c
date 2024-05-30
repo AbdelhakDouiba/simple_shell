@@ -9,12 +9,14 @@
 char *_which(char *command)
 {
 	int a, b;
-	char path[] = "PATH=", *p, *ways, *file, *tmp = "";
+	char path[] = "PATH=", *p, *ways, *file;
 	const char delim[] = ":\n";
 	struct stat st;
 
-	if ((stat(command, &st)) == 0)
+	if ((stat(command, &st)) == 0 && command[0] == '/')
 		return (command);
+	if ((stat(command, &st)) != 0 && command[0] == '/')
+		return (NULL);
 	p = _getenv((const char *)path);
 	if (p == NULL)
 		return (NULL);
@@ -30,17 +32,15 @@ char *_which(char *command)
 		a = _strlen(ways);
 		file = (char *)malloc(sizeof(char) * (a + b + 2));
 		if (file == NULL)
-		{
-			freeptr2(command, p);
-			return (NULL);
-		}
+			freeptr2(command, p), return (NULL);
 		copy(file, ways, "/");
 		copy(file, file, command);
-		if (exitance(file, tmp, p, delim) == 0)
-			return (file);
+		if (exitance(file, p) == 0)
+			free(command), return (file);
 		ways = strtok(NULL, delim);
 		if (ways == NULL)
 		{
+			free(command);
 			freeptr2(file, p);
 			return (NULL);
 		}

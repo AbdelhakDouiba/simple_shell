@@ -1,5 +1,5 @@
 #include "main.h"
-
+#define N 0
 /**
 *main - a simple shell
 *@av: argument verctor
@@ -9,9 +9,8 @@
 */
 int main(int ac __attribute__ ((unused)), char **av __attribute__ ((unused)))
 {
-	char *line = NULL, **command, exiting[] = "exit", envb[] = "env";
+	char *line = NULL, **command = NULL, exiting[] = "exit", envb[] = "env";
 	size_t n = 0;
-	pid_t pid;
 
 	signal(SIGINT, handle_sigs);
 	while (true)
@@ -45,8 +44,7 @@ int main(int ac __attribute__ ((unused)), char **av __attribute__ ((unused)))
 			doing(line, command, av[0], &n);
 			continue;
 		}
-		pid = fork();
-		executing(line, command, &n, pid);
+		executing(line, command, &n);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -86,8 +84,13 @@ void freedom3(char *ptr1, char **ptr2, char *ptr3)
 */
 void doing(char *line, char **command, char *av, size_t *n)
 {
+	int i = 1;
+
 	dprintf(STDERR_FILENO, "%s: Not found\n", av);
 	free(line);
+	while (command[i] != NULL)
+		free(command[i++]);
+	free(command[0]);
 	free(command);
 	*n = 0;
 	line = NULL;
@@ -98,26 +101,39 @@ void doing(char *line, char **command, char *av, size_t *n)
 *@line: pointer
 *@command: pointer
 *@n: ssize_t variable
-*@pid: pid
 *
 */
-void executing(char *line, char **command, size_t *n, pid_t pid)
+void executing(char *line, char **command, size_t *n)
 {
-	int status;
+	int status, i = 1;
+	pid_t pid;
 
+	pid = fork();
 	if (pid == 0)
 	{
 		if (execve(command[0], command, environ) == -1)
 		{
-			perror(line);
-			freedom(command[0], command);
+			dprintf(STDERR_FILENO, "%s: Not found 22\n", line);
+			free(line);
+			while (command[i] != NULL)
+				free(command[i++]);
+			free(command[0]);
+			free(command);
 			exit(EXIT_FAILURE);
 		}
 	}
 	else
 	{
 		wait(&status);
-		freedom3(command[0], command, line);
+		free(line);
+		line = NULL;
+		i = 1;
+		while (command[i] != NULL)
+			free(command[i++]);
+		if (command[i] == NULL)
+			free(command[i]);
+		free(command[0]);
+		free(command);
 		*n = 0;
 		if (pid == -1)
 			exit(EXIT_FAILURE);
