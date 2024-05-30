@@ -25,28 +25,28 @@ char *_which(char *command)
 	{
 		freeptr2(p, command);
 		return (NULL);
-	}
-	b = _strlen(command);
+	} b = _strlen(command);
 	while (ways != NULL)
 	{
 		a = _strlen(ways);
 		file = (char *)malloc(sizeof(char) * (a + b + 2));
 		if (file == NULL)
-			freeptr2(command, p), return (NULL);
-		copy(file, ways, "/");
+		{
+			freeptr2(command, p);
+			return (NULL);
+		} copy(file, ways, "/");
 		copy(file, file, command);
 		if (exitance(file, p) == 0)
-			free(command), return (file);
+		{ free(command);
+			return (file);
+		}
 		ways = strtok(NULL, delim);
 		if (ways == NULL)
-		{
-			free(command);
+		{ free(command);
 			freeptr2(file, p);
 			return (NULL);
-		}
-		free(file);
-	}
-	freeptr2(command, p);
+		} free(file);
+	} freeptr2(command, p);
 	return (NULL);
 }
 
